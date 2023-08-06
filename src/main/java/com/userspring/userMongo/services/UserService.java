@@ -22,8 +22,31 @@ public class UserService {
 		return userRepository.findAll().stream().map(UserDTO::new).collect(Collectors.toList());
 	}
 
-	public UserDTO findById(String id) {
+	public User findById(String id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("User not found"));
-		return new UserDTO(user);
+		return user;
+	}
+
+	public User insertUser(User user) {
+		return userRepository.insert(user);
+	}
+
+	public void delete(String id) {
+		findById(id);
+		userRepository.deleteById(id);
+	}
+
+	public User update(User param) {
+		User user = findById(param.getId());
+
+		user.setName(param.getName());
+		user.setEmail(param.getEmail());
+
+		return userRepository.save(user);
+
+	}
+
+	public User fromDTO(UserDTO userDTO) {
+		return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail());
 	}
 }
