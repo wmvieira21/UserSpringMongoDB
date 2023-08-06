@@ -1,6 +1,7 @@
 package com.userspring.userMongo.config;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
@@ -41,8 +42,9 @@ public class Instantiation implements CommandLineRunner {
 
 		// posts
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss").withZone(ZoneId.systemDefault());
-		Post post1 = new Post(null, "Viagem para SP", "compras", Instant.now(), new AuthorDTO(maria));
-		Post post2 = new Post(null, "Viagem para SC", "praia", Instant.now(), new AuthorDTO(maria));
+		Post post1 = new Post(null, "Viagem para SP", "compras", LocalDate.now(), new AuthorDTO(maria));
+		Post post2 = new Post(null, "Viagem para SC", "praia", LocalDate.now().plus(Period.ofDays(30)),
+				new AuthorDTO(maria));
 
 		postRepository.deleteAll();
 		postRepository.saveAll(List.of(post1, post2));
