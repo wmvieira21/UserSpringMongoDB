@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.userspring.userMongo.DTO.UserDTO;
 import com.userspring.userMongo.domain.User;
 import com.userspring.userMongo.services.UserService;
 
@@ -19,7 +20,7 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
+	public ResponseEntity<List<UserDTO>> findAll() {
 		return ResponseEntity.ok().body(userService.findAll());
 	}
 }
