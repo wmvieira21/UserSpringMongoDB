@@ -2,14 +2,19 @@ package com.userspring.userMongo.config;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.userspring.userMongo.DTO.AuthorDTO;
+import com.userspring.userMongo.DTO.CommentDTO;
 import com.userspring.userMongo.domain.Post;
 import com.userspring.userMongo.domain.User;
 import com.userspring.userMongo.repository.PostRepository;
@@ -36,11 +41,23 @@ public class Instantiation implements CommandLineRunner {
 
 		// posts
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss").withZone(ZoneId.systemDefault());
-		Post post1 = new Post(null, "Viagem para SP", "compras", Instant.now(), maria);
-		Post post2 = new Post(null, "Viagem para SC", "praia", Instant.now(), maria);
-		
+		Post post1 = new Post(null, "Viagem para SP", "compras", Instant.now(), new AuthorDTO(maria));
+		Post post2 = new Post(null, "Viagem para SC", "praia", Instant.now(), new AuthorDTO(maria));
+
 		postRepository.deleteAll();
 		postRepository.saveAll(List.of(post1, post2));
+
+		// saving post on Maria
+		maria.getPost().addAll(List.of(post1, post2));
+		userRepository.save(maria);
+
+		// comments of the posts
+		CommentDTO comment1 = new CommentDTO("Have a nice trip", Instant.now(), new AuthorDTO(bob));
+		CommentDTO comment2 = new CommentDTO("Have a good one", Instant.now().plus(Period.ofDays(10)),
+				new AuthorDTO(alex));
+
+		post1.getComments().addAll(List.of(comment1, comment2));
+		postRepository.save(post1);
 
 	}
 }
